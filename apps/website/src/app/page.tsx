@@ -24,7 +24,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-3">
             <Image
-              src="/apps/website/public/brand/icon/CDS Shield.png" // adjust filename if needed
+              src="/apps/website/public/brand/icon/cds-shield.png" // adjust filename if needed
               alt="Calvert Digital Solutions"
               width={40}
               height={40}
@@ -92,7 +92,7 @@ export default function Home() {
 
           <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
             <Image
-              src="/apps/website/public/brand/logo/CDS Shield with title.png" // adjust filename
+              src="/apps/website/public/brand/logo/cds-logo-horizontal.png" // adjust filename
               alt="Calvert Digital Solutions"
               width={400}
               height={400}
