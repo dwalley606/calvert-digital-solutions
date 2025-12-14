@@ -6,8 +6,8 @@ export const metadata: Metadata = {
   title: "Calvert Digital Solutions",
   description: "Web, security, and automation for local businesses.",
   icons: {
-    icon: "/apps/website/public/brand/icon/CDS Shield.png",
-    apple: "/apps/website/public/brand/logo/CDS Shield with title.png",
+    icon: "/brand/icon/cds-shield.png",
+    apple: "/brand/logo/cds-logo-horizontal.png",
   },
 };
 
