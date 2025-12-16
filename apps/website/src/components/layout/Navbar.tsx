@@ -2,21 +2,16 @@ import Image from "next/image";
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/80 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-[#080E16] backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <Image
-            src="/brand/icon/cds-shield.png"
+            src="/brand/logo/cds-navbar-paint.png"
             alt="Calvert Digital Solutions"
-            width={40}
-            height={40}
+            width={220}
+            height={64}
             priority
-          />
-          <div className="leading-tight">
-            <div className="font-semibold tracking-wide">Calvert Digital Solutions</div>
-            <div className="text-xs text-slate-300">Web • Security • Automation</div>
-          </div>
-        </div>
+          />    
 
         <nav className="hidden items-center gap-6 text-sm text-slate-200 md:flex">
           <a href="#services" className="hover:text-white">Services</a>
@@ -29,6 +24,7 @@ export default function Navbar() {
             Contact
           </a>
         </nav>
+      </div>
       </div>
     </header>
   );
