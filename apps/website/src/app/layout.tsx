@@ -1,7 +1,8 @@
-// apps/website/src/app/layout.tsx
+// src/app/layout.tsx
 import type { Metadata } from "next";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
   title: "Calvert Digital Solutions",
@@ -19,9 +20,11 @@ export default function RootLayout({
     <html lang="en">
       <body className="min-h-screen bg-slate-950 text-slate-100 antialiased">
         <Navbar />
-        {children}
+        <main className="min-h-[calc(100vh-64px)]">{children}</main>
+        <Footer />
       </body>
     </html>
   );
 }
+
 

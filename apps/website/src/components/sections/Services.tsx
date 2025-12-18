@@ -1,22 +1,21 @@
-type Service = { title: string; desc: string };
+import { services } from "@/content/services";
 
-export default function Services({ services }: { services: Service[] }) {
+export default function Services() {
   return (
-    <section id="services" className="border-b border-white/10">
-      <div className="mx-auto max-w-6xl px-4 py-14">
-        <h2 className="text-2xl font-bold tracking-tight">Services</h2>
-        <p className="mt-2 max-w-2xl text-slate-300">
-          Simple packages that cover what most small businesses actually need.
-        </p>
+    <section className="py-24">
+      <div className="mx-auto max-w-6xl px-6">
+        <h2 className="mb-12 text-3xl font-bold">Services</h2>
 
-        <div className="mt-8 grid gap-4 md:grid-cols-3">
-          {services.map((s) => (
+        <div className="grid gap-8 md:grid-cols-3">
+          {services.map((service) => (
             <div
-              key={s.title}
-              className="rounded-2xl border border-white/10 bg-white/5 p-6"
+              key={service.title}
+              className="rounded-xl border border-slate-800 bg-slate-900 p-6"
             >
-              <div className="text-lg font-semibold">{s.title}</div>
-              <div className="mt-2 text-sm text-slate-300">{s.desc}</div>
+              <h3 className="mb-2 text-xl font-semibold">
+                {service.title}
+              </h3>
+              <p className="text-slate-400">{service.desc}</p>
             </div>
           ))}
         </div>
@@ -24,3 +23,4 @@ export default function Services({ services }: { services: Service[] }) {
     </section>
   );
 }
+
