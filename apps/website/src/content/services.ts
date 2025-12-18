@@ -1,15 +1,22 @@
 export const services = [
-    {
-      title: "Websites that convert",
-      desc: "Fast, modern landing pages and small business sites that look legit and load instantly.",
-    },
-    {
-      title: "Automation & CRM setup",
-      desc: "Simple pipelines, follow-ups, and lead capture so you stop losing money to “I’ll remember later.”",
-    },
-    {
-      title: "Security-first setup",
-      desc: "Domains, email, DNS, password management, and hardening basics—no sketchy shortcuts.",
-    },
-  ];
-  
+  {
+    title: "Web Presence",
+    desc: "Modern, fast websites and landing pages that make your business look legit and convert.",
+    image: "/services/web.jpg",
+    href: "/services/web-presence",
+  },
+  {
+    title: "Lead Flow & Automation",
+    desc: "Capture leads, respond faster, and stop losing money to missed follow-ups.",
+    image: "/services/automation.jpg",
+    href: "/services/lead-flow",
+  },
+  {
+    title: "Security & Foundations",
+    desc: "Domains, email, and security basics set up correctly—no sketchy shortcuts.",
+    image: "/services/security.jpg",
+    href: "/services/security-foundations",
+  },
+];
+
+
