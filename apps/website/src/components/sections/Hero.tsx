@@ -42,15 +42,15 @@ export default function Hero() {
         </div>
 
         <div className="flex items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-6">
-
           <Image
-            src="/brand/logo/cds-logo-horizontal.png"
-            alt="Calvert Digital Solutions"
-            width={400}
-            height={400}
-            priority
-          />
-        </div>
+          src="/brand/logo/cds-logo-horizontal.png"
+          alt="Calvert Digital Solutions"
+          width={360}
+          height={120}
+          className="max-w-full object-contain h-auto"
+          priority
+        />
+      </div>
       </div>
     </section>
   );
