@@ -3,7 +3,7 @@ export const services = [
     title: "Web Presence",
     desc: "Modern, fast websites and landing pages that make your business look legit and convert.",
     image: "/services/web.jpg",
-    href: "/services/web-presence",
+    href: "",
   },
   {
     title: "Lead Flow & Automation",
