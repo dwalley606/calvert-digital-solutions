@@ -1,35 +1,30 @@
 export default function Contact() {
   return (
-    <section id="contact" className="border-b border-white/10">
-      <div className="mx-auto max-w-6xl px-4 py-14">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8">
-          <h2 className="text-2xl font-bold tracking-tight">Contact</h2>
-          <p className="mt-2 max-w-2xl text-slate-300">
-            Quick intro call is the fastest way to see if we’re a good fit.
-            No pressure, no sales script.
+    <section id="contact" className="px-4 py-20">
+      <div className="mx-auto max-w-4xl">
+        <div className="mb-10 text-center">
+          <h2 className="text-3xl font-bold tracking-tight text-white">Let's Talk</h2>
+          <p className="mt-3 max-w-xl mx-auto text-slate-400">
+            15-minute call. Tell me what your business needs. I'll tell you exactly what makes sense and what it'll cost.
           </p>
-
-          {/* Primary CTA */}
-          <div className="mt-6">
-            <a
-              href="https://meetings-na2.hubspot.com/daniel-walley"
-              target="_blank"
-              rel="noreferrer"
-              className="inline-flex items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-slate-200 transition"
-            >
-              Book a quick call
-            </a>
-            <p className="mt-2 text-xs text-slate-400">
-              15 minutes · Phone or Google Meet
-            </p>
-          </div>
-
-          
-
-          <div className="mt-6 text-xs text-slate-400">
-            © {new Date().getFullYear()} Calvert Digital Solutions, LLC
-          </div>
         </div>
+
+        <div className="rounded-2xl border border-white/10 bg-navy-800 overflow-hidden">
+          <iframe
+            src="https://meetings-na2.hubspot.com/daniel-walley?embed=true"
+            width="100%"
+            height="690"
+            style={{ border: 0 }}
+            title="Book a call with Calvert Digital Solutions"
+          />
+        </div>
+
+        <p className="mt-6 text-center text-xs text-slate-500">
+          Prefer email? Reach out at{" "}
+          <a href="mailto:daniel@calvertdigitalsolutions.com" className="text-slate-400 hover:text-white transition-colors">
+            daniel@calvertdigitalsolutions.com
+          </a>
+        </p>
       </div>
     </section>
   );

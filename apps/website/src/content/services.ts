@@ -1,22 +1,27 @@
-export const services = [
+export type Service = {
+  title: string;
+  desc: string;
+  href: string;
+  icon: "globe" | "server" | "refresh";
+};
+
+export const services: Service[] = [
   {
-    title: "Web Presence",
-    desc: "Modern, fast websites and landing pages that make your business look legit and convert.",
-    image: "/services/web.jpg",
-    href: "",
+    title: "Web Design & Development",
+    desc: "Clean, modern websites built with React and Next.js. Fast-loading, mobile-first, and designed to turn visitors into leads.",
+    href: "/services/web-design",
+    icon: "globe",
   },
   {
-    title: "Lead Flow & Automation",
-    desc: "Capture leads, respond faster, and stop losing money to missed follow-ups.",
-    image: "/services/automation.jpg",
-    href: "/services/lead-flow",
+    title: "Domain & Hosting Setup",
+    desc: "Get your domain, DNS, and hosting configured correctly from the start. No confusion, no waiting — just a working setup.",
+    href: "/services/domain-hosting",
+    icon: "server",
   },
   {
-    title: "Security & Foundations",
-    desc: "Domains, email, and security basics set up correctly—no sketchy shortcuts.",
-    image: "/services/security.jpg",
-    href: "/services/security-foundations",
+    title: "Site Maintenance & Updates",
+    desc: "Keep your site current, fast, and functional. Monthly check-ins, content updates, and someone to call when something breaks.",
+    href: "/services/maintenance",
+    icon: "refresh",
   },
 ];
-
-

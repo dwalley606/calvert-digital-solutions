@@ -1,16 +1,43 @@
+import Link from "next/link";
+import Image from "next/image";
+
+const links = [
+  { label: "Services", href: "/services" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
+];
+
 export default function Footer() {
-    return (
-      <footer className="border-t border-slate-800 bg-slate-950">
-        <div className="mx-auto max-w-6xl px-6 py-6 text-sm text-slate-400 flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-          <span>
-            © {new Date().getFullYear()} Calvert Digital Solutions
-          </span>
-  
-          <span className="text-slate-500">
-            Built in Maryland · Security-first
-          </span>
+  return (
+    <footer className="border-t border-white/10 bg-navy-800">
+      <div className="mx-auto max-w-6xl px-6 py-10">
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div className="flex flex-col gap-3">
+            <Image
+              src="/brand/logo/cds-navbar.png"
+              alt="Calvert Digital Solutions"
+              width={160}
+              height={36}
+            />
+            <p className="text-sm text-slate-400">
+              Web design for Calvert County small businesses.
+            </p>
+          </div>
+
+          <nav className="flex gap-6 text-sm text-slate-400">
+            {links.map((l) => (
+              <Link key={l.href} href={l.href} className="hover:text-white transition-colors">
+                {l.label}
+              </Link>
+            ))}
+          </nav>
         </div>
-      </footer>
-    );
-  }
-  
+
+        <div className="mt-8 border-t border-white/10 pt-6 flex flex-col gap-1 text-xs text-slate-500 md:flex-row md:justify-between">
+          <span>© {new Date().getFullYear()} Calvert Digital Solutions, LLC</span>
+          <span>Built in Maryland</span>
+        </div>
+      </div>
+    </footer>
+  );
+}

@@ -1,15 +1,17 @@
 import Hero from "@/components/sections/Hero";
-import VideoSection from "@/components/sections/Video";
+import Services from "@/components/sections/Services";
+import WhyCDS from "@/components/sections/WhyCDS";
+import FeaturedWork from "@/components/sections/FeaturedWork";
 import Contact from "@/components/sections/Contact";
 
 export default function Home() {
   return (
-    <main className="min-h-screen">
+    <>
       <Hero />
-      <VideoSection />
+      <Services />
+      <WhyCDS />
+      <FeaturedWork />
       <Contact />
-    </main>
+    </>
   );
 }
-
-

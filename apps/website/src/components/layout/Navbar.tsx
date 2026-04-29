@@ -10,7 +10,7 @@ const nav = [
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-800 bg-slate-950">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-navy">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-3">
           <Image
@@ -27,15 +27,19 @@ export default function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className="text-slate-300 hover:text-white transition-colors"
+              className="text-slate-300 transition-colors hover:text-white"
             >
               {item.label}
             </Link>
           ))}
+          <a
+            href="#contact"
+            className="rounded-lg bg-red px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-dark"
+          >
+            Book a Call
+          </a>
         </nav>
       </div>
     </header>
   );
 }
-
-
