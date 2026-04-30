@@ -1,3 +1,5 @@
+import ContactForm from '@/components/sections/ContactForm';
+
 export default function Contact() {
   return (
     <section id="contact" className="px-4 py-20">
@@ -11,7 +13,7 @@ export default function Contact() {
 
         <div className="rounded-2xl border border-white/10 bg-navy-800 overflow-hidden">
           <iframe
-            src="https://meetings-na2.hubspot.com/daniel-walley?embed=true"
+            src={`${process.env.NEXT_PUBLIC_HUBSPOT_MEETING_URL}?embed=true`}
             width="100%"
             height="690"
             style={{ border: 0 }}
@@ -19,12 +21,13 @@ export default function Contact() {
           />
         </div>
 
-        <p className="mt-6 text-center text-xs text-slate-500">
-          Prefer email? Reach out at{" "}
-          <a href="mailto:daniel@calvertdigitalsolutions.com" className="text-slate-400 hover:text-white transition-colors">
-            daniel@calvertdigitalsolutions.com
-          </a>
-        </p>
+        <div className="mt-12 border-t border-white/10 pt-12">
+          <h3 className="text-xl font-semibold text-white text-center">Prefer to write first?</h3>
+          <p className="mt-2 text-center text-slate-400 text-sm">
+            Send me a message and I'll get back to you within one business day.
+          </p>
+          <ContactForm />
+        </div>
       </div>
     </section>
   );

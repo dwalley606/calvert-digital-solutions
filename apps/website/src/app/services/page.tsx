@@ -30,7 +30,7 @@ export default function ServicesPage() {
             </p>
             <div className="mt-6">
               <a
-                href="https://meetings-na2.hubspot.com/daniel-walley"
+                href={process.env.NEXT_PUBLIC_HUBSPOT_MEETING_URL}
                 target="_blank"
                 rel="noreferrer"
                 className="inline-flex items-center justify-center rounded-lg bg-white px-5 py-3 text-sm font-semibold text-slate-950 hover:bg-slate-200 transition"

@@ -1,36 +1,54 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CDS Website
 
-## Getting Started
+Marketing site for Calvert Digital Solutions. Built with Next.js 16 App Router, Tailwind v4, TypeScript strict, React 19.
 
-First, run the development server:
+## Getting started
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+npm run dev     # http://localhost:3000
+npm run build   # production build
+npm run lint    # eslint check
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+src/
+├── app/                    # Routes (App Router)
+│   ├── page.tsx            # Home
+│   ├── about/page.tsx
+│   ├── contact/page.tsx
+│   └── services/
+│       ├── page.tsx
+│       ├── [branch]/page.tsx
+│       └── [branch]/[leaf]/page.tsx
+├── components/
+│   ├── layout/             # Navbar, Footer
+│   ├── sections/           # Full-width page sections (Hero, Services, About, …)
+│   ├── blocks/             # Reusable blocks (ServiceTree)
+│   └── ui/                 # Small UI primitives
+├── content/                # All copy and data (edit here, not in JSX)
+│   ├── site.ts
+│   ├── services.ts
+│   ├── servicesTree.ts
+│   ├── process.ts
+│   └── caseStudies.ts
+└── lib/                    # Utilities, validators, CRM helpers
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Key conventions
 
-## Learn More
+- All copy/data lives in `src/content/` — never inline it in JSX
+- Sections are self-contained; pages just compose sections
+- Tailwind v4 CSS-first — no `tailwind.config.js`, configuration lives in `globals.css`
+- Path alias `@/` maps to `src/`
 
-To learn more about Next.js, take a look at the following resources:
+## Open TODOs before launch
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Fill `site.ts`, `process.ts`, `caseStudies.ts`, `constraints.ts` stubs
+- [ ] Replace `YOUR_VIDEO_ID` placeholder in `VideoSection`
+- [ ] Fix empty `href` on `web-presence` service card
+- [ ] Add Process section to home page
+- [ ] Move service images from `src/app/services/` → `public/`
+- [ ] Configure `next/font` for Geist (currently falling back to Arial)
