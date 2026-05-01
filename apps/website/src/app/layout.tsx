@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   description: "Modern websites for Calvert County small businesses.",
   icons: {
     icon: "/brand/icon/cds-shield.png",
-    apple: "/brand/logo/cds-logo-horizontal.png",
+    apple: "/brand/icon/cds-shield.png",
   },
 };
 

@@ -14,10 +14,10 @@ export default function Footer() {
         <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-3">
             <Image
-              src="/brand/logo/cds-navbar.png"
+              src="/brand/logo/cds-logo-full-size.png"
               alt="Calvert Digital Solutions"
-              width={160}
-              height={36}
+              width={200}
+              height={44}
             />
             <p className="text-sm text-slate-400">
               Web design for Calvert County small businesses.

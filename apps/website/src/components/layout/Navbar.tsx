@@ -10,14 +10,14 @@ const nav = [
 
 export default function Navbar() {
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-navy">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-navy-800">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <Link href="/" className="flex items-center gap-3">
           <Image
-            src="/brand/logo/cds-navbar.png"
+            src="/brand/logo/cds-logo-full-size.png"
             alt="Calvert Digital Solutions"
-            width={180}
-            height={40}
+            width={220}
+            height={48}
             priority
           />
         </Link>
