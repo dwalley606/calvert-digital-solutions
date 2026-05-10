@@ -1,88 +1,188 @@
 # apps/website — Next.js App Guide
 
 ## Stack
-- **Framework:** Next.js 16, App Router, `src/app` directory
-- **Styling:** Tailwind v4 — uses `@import "tailwindcss"` in `globals.css`, NOT `tailwind.config.js`
+- **Framework:** Next.js 16.0.10, App Router, `src/app` directory
+- **Styling:** Tailwind v4 — uses `@import "tailwindcss"` in `globals.css`, NO `tailwind.config.js`
 - **Language:** TypeScript strict
-- **React:** v19
+- **React:** v19.2.1
+- **Email:** Resend (`resend` npm package) — used in the contact form API route
+- **CRM:** HubSpot (free tier) — meeting embed + contact creation via private app token
 
 ## Running locally
 ```bash
 cd apps/website
 npm run dev   # http://localhost:3000
 ```
+Requires a `.env.local` file copied from `.env.example` with real keys filled in.
 
-## Directory conventions
+## Environment variables
+| Variable | Scope | Purpose |
+|---|---|---|
+| `NEXT_PUBLIC_SITE_URL` | Public | Canonical URL (`https://calvertdigitalsolutions.com`) |
+| `NEXT_PUBLIC_HUBSPOT_MEETING_URL` | Public | HubSpot embed URL — used in `Contact.tsx` iframe |
+| `RESEND_API_KEY` | Server | Resend API key for contact form email delivery |
+| `HUBSPOT_ACCESS_TOKEN` | Server | HubSpot private app token — creates CRM contacts on form submit |
 
-### `src/app/` — pages (App Router)
-Each folder is a route. `page.tsx` is the entry point. Layouts compose via `layout.tsx`.
+## Design system (globals.css)
+Custom Tailwind v4 color tokens:
+```
+navy      #0a1628   ← main page background
+navy-800  #0d1f3c   ← card / navbar / footer background
+navy-700  #122347   ← gradient surface variant
+red       #c41e3a   ← primary CTA / accent color
+red-dark  #a81932   ← hover state for red
+```
+Body defaults: `bg-navy text-slate-100`, font: `system-ui, -apple-system, Arial, sans-serif` (no Google Fonts).
+
+---
+
+## Directory layout
 
 ```
-app/
-├── layout.tsx            ← root layout: Navbar + Footer, dark bg-slate-950 body
-├── page.tsx              ← home: Hero + VideoSection + Contact
-├── services/
-│   ├── page.tsx          ← services overview
-│   ├── [branch]/page.tsx ← dynamic: /services/web-presence etc.
-│   └── [branch]/[leaf]/page.tsx ← dynamic: individual service detail
-├── about/page.tsx
-└── contact/page.tsx
+src/
+├── app/
+│   ├── layout.tsx                    ← root: Navbar + Footer, dark body
+│   ├── globals.css                   ← Tailwind v4 + @theme tokens
+│   ├── page.tsx                      ← home page
+│   ├── about/page.tsx                ← /about (fully self-contained page)
+│   ├── contact/page.tsx              ← /contact (wraps Contact section)
+│   ├── services/
+│   │   ├── page.tsx                  ← /services overview
+│   │   ├── custom-websites/page.tsx  ← /services/custom-websites
+│   │   ├── cms-websites/page.tsx     ← /services/cms-websites
+│   │   └── monthly-retainer/page.tsx ← /services/monthly-retainer
+│   └── api/
+│       └── contact/route.ts          ← POST handler: Resend email + HubSpot contact
+├── components/
+│   ├── layout/
+│   │   ├── Navbar.tsx                ← sticky, bg-navy-800
+│   │   └── Footer.tsx                ← bg-navy-800, © Calvert Digital Solutions LLC
+│   └── sections/
+│       ├── Hero.tsx                  ← used on home
+│       ├── Services.tsx              ← used on home + /services page
+│       ├── WhyCDS.tsx                ← used on home
+│       ├── FeaturedWork.tsx          ← used on home
+│       ├── Contact.tsx               ← used on home + /contact (HubSpot embed + ContactForm)
+│       ├── ContactForm.tsx           ← 'use client', submits to /api/contact
+│       ├── About.tsx                 ← NOT currently used on any page (old stub)
+│       ├── Video.tsx                 ← NOT currently used, has placeholder VIDEO_ID
+│       └── Process.tsx               ← NOT currently used on any page
+├── content/
+│   └── services.ts                   ← 3-item services array (title, desc, href)
+│   (site.ts, process.ts, caseStudies.ts are empty stubs)
+└── lib/
+    └── utils.ts, constraints.ts      ← both empty stubs
 ```
 
-### `src/components/`
-- `layout/` — Navbar, Footer (shared across all pages via root layout)
-- `sections/` — full-width page sections (Hero, Services, About, Process, Contact, Video)
-- `blocks/` — reusable content blocks used inside sections (ServiceTree)
+---
 
-**Pattern:** sections are standalone, self-contained. They import from `@/content/` for data.
-Pages compose sections. Sections do not import each other.
+## Pages
 
-### `src/content/` — all site copy and data
-Edit here, not inside components.
+### Home (`/`)
+Composes: `Hero → Services → WhyCDS → FeaturedWork → Contact`
 
-| File | Purpose |
-|---|---|
-| `services.ts` | 3 top-level service cards (title, desc, image, href) |
-| `servicesTree.ts` | Detailed branch/leaf breakdown for the services page |
-| `process.ts` | Empty — intended for the 3-step "how it works" data |
-| `caseStudies.ts` | Empty — intended for future case study cards |
-| `site.ts` | Empty — intended for global metadata (business name, phone, etc.) |
+### About (`/about`)
+Fully self-contained in `about/page.tsx` — no separate section component used. Sections:
+- Intro: photo + headline + one-para bio
+- Background: 3 paragraphs (logistics/PM background → education degree → web dev)
+- "What Working With Me Looks Like": 3-card grid (Clear timeline / Regular updates / You own everything)
+- CTA: links to `/contact`
 
-### `src/lib/`
-- `utils.ts` — shared utilities
-- `constraints.ts` — empty, intended for business rules / constants
+### Services overview (`/services`)
+`Services` section (card grid from `services.ts`) + "Not sure what you need?" CTA block.
 
-### `public/brand/`
-- `logo/cds-logo-full-size.png` — large full logo
-- `logo/cds-logo-horizontal.png` — wide format (used in hero)
-- `logo/cds-navbar.png` — logo used in sticky navbar
-- `logo/cds-navbar-paint.png` — paint-style variant
-- `icon/cds-shield.png` — favicon / icon
+### Service detail pages (all share same structure)
+Each has: back link → hero section → "What's Included/Covered" card grid → CTA
+
+| Route | Title | Included items |
+|---|---|---|
+| `/services/custom-websites` | Custom Website Development | Custom Design, Mobile Responsive, SEO Foundations, Contact & Booking Integration, Performance Optimization |
+| `/services/cms-websites` | CMS Website Builds & Migrations | Platform Consultation, Redesign, Content Migration, Mobile Optimization, Basic SEO Setup |
+| `/services/monthly-retainer` | Monthly Maintenance & Support | Content Updates, Security Monitoring, Performance Checks, Priority Support, Hosting Management |
+
+### Contact (`/contact`)
+Wraps the `Contact` section — HubSpot meeting iframe + `ContactForm` below it.
+
+---
+
+## Components
+
+### Layout
+- **Navbar** — sticky `top-0 z-50`, nav links: Home / Services / About / Contact, "Book a Call" CTA anchors to `#contact`
+- **Footer** — logo, nav links (Services / About / Contact), copyright + "Built in Maryland"
+
+### Sections
+- **Hero** — centered, logo image + h1 "Modern Websites for Calvert County Businesses" + two CTAs (Book a Free Call → `#contact`, See Services → `/services`)
+- **Services** — reads from `src/content/services.ts`, renders 3 cards as `<Link>` to service detail pages
+- **WhyCDS** — 3-card grid: "Local & Available" / "Clear Communication" / "Ships on Time"
+- **FeaturedWork** — 3 placeholder project cards (all link to `https://danielwalley.vercel.app`), "View full portfolio →" link to same URL
+- **Contact** — `id="contact"` section; HubSpot meeting iframe (src from `NEXT_PUBLIC_HUBSPOT_MEETING_URL`), then `ContactForm`
+- **ContactForm** — `'use client'` component, fields: Name + Email + Message, POSTs JSON to `/api/contact`
+- **About** _(unused)_ — old stub section, not imported anywhere
+- **Video** _(unused)_ — YouTube embed with `YOUR_VIDEO_ID` placeholder, not imported anywhere
+- **Process** _(unused)_ — 3-step "how it works" section, not imported anywhere
+
+---
+
+## API route — `POST /api/contact`
+
+Validates name/email/message (basic type + presence checks). On valid input:
+1. Sends email via Resend to `dwalley606@gmail.com`
+2. Creates a HubSpot CRM contact via `https://api.hubapi.com/crm/v3/objects/contacts`
+
+Both run in parallel (`Promise.allSettled`). Response is `500` only if email send fails; HubSpot failure is silent.
+
+---
+
+## Content files
+
+`src/content/services.ts` — the only populated content file. Exports `services: Service[]`:
+```ts
+type Service = { title: string; desc: string; href: string; }
+```
+Current entries: Custom Websites (`/services/custom-websites`), CMS Websites (`/services/cms-websites`), Monthly Retainer (`/services/monthly-retainer`).
+
+`site.ts`, `process.ts`, `caseStudies.ts`, `src/lib/constraints.ts` are all empty — intended for future use.
+
+---
+
+## Brand assets (`public/`)
+```
+public/
+├── brand/
+│   ├── logo/
+│   │   ├── cds-logo-full-size.png   ← used in Hero and Navbar/Footer
+│   │   ├── cds-logo-horizontal.png  ← available, not currently used
+│   │   ├── cds-navbar.png           ← available, not currently used
+│   │   └── cds-navbar-paint.png     ← available, not currently used
+│   └── icon/
+│       └── cds-shield.png           ← favicon + apple icon (in layout.tsx metadata)
+└── about/
+    └── selfie.jpg                   ← used on /about page
+```
+Service images (`web.jpg`, `automation.jpg`, `security.jpg`) live in `src/app/services/` — they are not currently used in any page or component.
+
+---
 
 ## Key patterns
 
-### Images
-Use `next/image` for all images. Brand assets are in `/public/brand/`. Service images are currently in `src/app/services/` (web.jpg, automation.jpg, security.jpg) — these should eventually move to `public/`.
-
-### Links
-Use `next/link` for internal navigation. Use `<a target="_blank" rel="noreferrer">` for external (HubSpot, etc.).
-
-### Slugs
-`serviceBranches[].id` is the URL segment for `/services/[branch]`. Leaf slugs are generated with the local `slugify()` helper (lowercase, hyphens). This helper is duplicated — worth extracting to `src/lib/utils.ts`.
-
-### Dynamic routes
-`[branch]` and `[leaf]` pages are scaffolded but thin. They read from `servicesTree.ts` — no DB, no API.
-
-## Known issues / TODOs
-- `services.ts`: `web-presence` card has `href: ""` — should be `href: "/services/web-presence"`
-- `VideoSection`: has placeholder `YOUR_VIDEO_ID` — swap when real video exists, or replace with a fallback UI
-- `Process` section exists (`components/sections/Process.tsx`) but is not on the home page
-- `site.ts`, `process.ts`, `caseStudies.ts`, `constraints.ts` are all empty stubs
-- Geist font referenced in `globals.css` theme variables but `next/font/google` is not set up — body falls back to Arial
-- `slugify()` is duplicated in `ServiceTree.tsx` and `[branch]/page.tsx` — extract to `lib/utils.ts`
-- Service images (`web.jpg` etc.) live in `src/app/services/` — should move to `public/`
+- Use `next/image` for all images
+- Use `next/link` for all internal navigation
+- Use `<a target="_blank" rel="noreferrer">` for external links (HubSpot, portfolio, etc.)
+- All site copy and data belongs in `src/content/` — never inline data in JSX
+- Tailwind v4 CSS-first config: add new design tokens in the `@theme` block in `globals.css`, never create `tailwind.config.js`
 
 ## What to avoid
 - Vercel-specific APIs (`@vercel/og`, edge middleware, etc.) — keep it platform-portable
-- Putting copy or data inside JSX — all content belongs in `src/content/`
-- New `tailwind.config.js` — this project uses Tailwind v4 CSS-first config
+- Putting copy or data inside JSX — it belongs in `src/content/`
+- Creating `tailwind.config.js` — this project uses Tailwind v4 CSS-first config
+
+---
+
+## Known TODOs
+- `VideoSection` (`Video.tsx`) has `YOUR_VIDEO_ID` placeholder — swap when real video is ready or delete the component
+- `About.tsx`, `Video.tsx`, `Process.tsx` exist but are not used anywhere — clean up or wire in when needed
+- `FeaturedWork` cards all link to `https://danielwalley.vercel.app` — replace with real project links when available
+- `site.ts`, `process.ts`, `caseStudies.ts`, `constraints.ts` are empty stubs
+- Contact API `from` address is `onboarding@resend.dev` — needs a Resend-verified domain email before production
+- Service images (`web.jpg`, etc.) in `src/app/services/` are unused — move to `public/` or delete
