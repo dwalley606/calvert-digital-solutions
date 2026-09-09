@@ -32,12 +32,12 @@ export default function Navbar() {
               {item.label}
             </Link>
           ))}
-          <a
-            href="#contact"
+          <Link
+            href="/contact"
             className="rounded-lg bg-red px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-red-dark"
           >
             Book a Call
-          </a>
+          </Link>
         </nav>
       </div>
     </header>
