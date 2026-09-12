@@ -1,3 +1,4 @@
+import { digitalBusinessCard } from '@/content/contact';
 import ContactForm from '@/components/sections/ContactForm';
 
 export default function Contact() {
@@ -9,6 +10,20 @@ export default function Contact() {
           <p className="mt-3 max-w-xl mx-auto text-slate-400">
             15-minute call. Tell me what your business needs. I'll tell you exactly what makes sense and what it'll cost.
           </p>
+        </div>
+
+        <div className="mb-10 text-center">
+          <a
+            href={digitalBusinessCard.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+          >
+            {digitalBusinessCard.label}
+            <span className="ml-2" aria-hidden="true">↗</span>
+            <span className="sr-only"> (opens in a new tab)</span>
+          </a>
+          <p className="mt-3 text-sm text-slate-400">{digitalBusinessCard.description}</p>
         </div>
 
         <div className="rounded-2xl border border-white/10 bg-navy-800 overflow-hidden">
