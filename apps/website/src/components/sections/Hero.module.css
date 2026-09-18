@@ -1,0 +1,182 @@
+.hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 83% 46%, rgb(178 34 52 / 22%), transparent 20rem),
+    radial-gradient(circle at 77% 42%, rgb(212 195 162 / 15%), transparent 28rem),
+    linear-gradient(112deg, #0b1f3b 0%, #0b1f3b 50%, #12345a 100%);
+  color: #f5f5f4;
+  border-bottom: 1px solid rgb(126 163 200 / 24%);
+  padding: clamp(3rem, 6vw, 6rem) 1.5rem;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  right: -8%;
+  bottom: -14%;
+  width: 62%;
+  height: 64%;
+  opacity: 0.16;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0,
+    transparent 15px,
+    rgb(245 245 244 / 28%) 16px,
+    transparent 17px
+  );
+  transform: skewY(-2deg);
+  mask-image: linear-gradient(to left, black, transparent 92%);
+}
+
+.hero::after {
+  content: "CALVERT COUNTY  /  SOUTHERN MARYLAND";
+  position: absolute;
+  z-index: -1;
+  right: clamp(1.5rem, 5vw, 5rem);
+  bottom: 1.25rem;
+  color: rgb(245 245 244 / 22%);
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+}
+
+.inner {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.65fr) minmax(0, 0.85fr);
+  align-items: center;
+  gap: clamp(2rem, 5vw, 5rem);
+  max-width: 72rem;
+  margin-inline: auto;
+}
+
+.copy { min-width: 0; }
+
+.eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin: 0 0 1.5rem;
+  color: #d4c3a2;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.6;
+  letter-spacing: 0.19em;
+}
+
+.eyebrow::before {
+  content: "";
+  width: 2rem;
+  height: 3px;
+  flex-shrink: 0;
+  background: #b22234;
+}
+
+.heading {
+  margin: 0;
+  font-size: clamp(3.75rem, 7.3vw, 6.5rem);
+  font-weight: 400;
+  line-height: 0.98;
+  letter-spacing: 0.005em;
+}
+
+.heading span { display: block; }
+
+.description {
+  max-width: 34rem;
+  margin: 1.75rem 0 0;
+  color: #f5f5f4;
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  font-weight: 400;
+  line-height: 1.8;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.875rem;
+  margin-top: 2rem;
+}
+
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 3.25rem;
+  padding: 0.875rem 1.5rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-decoration: none;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease;
+}
+
+.button:focus-visible {
+  outline: 3px solid #7ea3c8;
+  outline-offset: 4px;
+}
+
+.primary { background: #b22234; color: #f5f5f4; }
+.primary:hover { background: #f5f5f4; color: #0b1f3b; }
+.secondary { border-color: #7ea3c8; color: #f5f5f4; }
+.secondary:hover { background: #f5f5f4; border-color: #f5f5f4; color: #0b1f3b; }
+
+.note {
+  margin: 1rem 0 0;
+  color: #7ea3c8;
+  font-size: 0.75rem;
+  line-height: 1.8;
+}
+
+.brand {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-left: 1px solid rgb(126 163 200 / 24%);
+  padding-left: clamp(1.5rem, 3vw, 3rem);
+}
+
+.brand::before {
+  content: "";
+  position: absolute;
+  width: min(28rem, 130%);
+  aspect-ratio: 1;
+  border: 1px solid rgb(126 163 200 / 18%);
+  border-radius: 50%;
+  box-shadow: 0 0 0 4rem rgb(126 163 200 / 3%), 0 0 6rem rgb(126 163 200 / 12%);
+}
+
+.shield {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 1.5rem 2rem rgb(2 12 27 / 42%));
+  display: block;
+  width: 100%;
+  max-width: 19rem;
+  height: auto;
+}
+
+@media (max-width: 767px) {
+  .hero::before { width: 120%; height: 34%; right: -35%; opacity: 0.1; }
+  .hero::after { display: none; }
+  .inner { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  .brand { grid-row: 1; justify-content: flex-start; border-left: 0; padding-left: 0; }
+  .shield { width: 7rem; }
+  .heading { font-size: clamp(3rem, 10.5vw, 5rem); }
+  .eyebrow { font-size: 0.6875rem; letter-spacing: 0.15em; }
+}
+
+@media (max-width: 420px) {
+  .button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button { transition: none; }
+}

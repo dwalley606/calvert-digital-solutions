@@ -1,17 +1,17 @@
 import Hero from "@/components/sections/Hero";
-import Services from "@/components/sections/Services";
-import WhyCDS from "@/components/sections/WhyCDS";
-import FeaturedWork from "@/components/sections/FeaturedWork";
-import Contact from "@/components/sections/Contact";
+import ValueProof from "@/components/sections/ValueProof";
+import BuildGrowSupport from "@/components/sections/BuildGrowSupport";
+import ProofTrust from "@/components/sections/ProofTrust";
+import HomeCTA from "@/components/sections/HomeCTA";
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <Services />
-      <WhyCDS />
-      <FeaturedWork />
-      <Contact />
+      <ValueProof />
+      <BuildGrowSupport />
+      <ProofTrust />
+      <HomeCTA />
     </>
   );
 }
