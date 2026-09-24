@@ -1,49 +1,65 @@
-import { digitalBusinessCard } from '@/content/contact';
+import Image from 'next/image';
+import { contactPage, digitalBusinessCard } from '@/content/contact';
 import ContactForm from '@/components/sections/ContactForm';
+import styles from './Contact.module.css';
 
 export default function Contact() {
+  const { hero, scheduler, written } = contactPage;
   return (
-    <section id="contact" className="px-4 py-20">
-      <div className="mx-auto max-w-4xl">
-        <div className="mb-10 text-center">
-          <h2 className="text-3xl font-bold tracking-tight text-white">Let's Talk</h2>
-          <p className="mt-3 max-w-xl mx-auto text-slate-400">
-            15-minute call. Tell me what your business needs. I'll tell you exactly what makes sense and what it'll cost.
-          </p>
+    <div id="contact">
+      <section className={styles.hero} aria-labelledby="contact-heading">
+        <Image src="/brand/production/cds-shield-simplified-color.svg" alt="" width={380} height={440} className={styles.heroMark} />
+        <div className={`site-container section-spacing ${styles.heroGrid}`}>
+          <div>
+            <p className={styles.eyebrow}>{hero.eyebrow}</p>
+            <h1 id="contact-heading" className={`cds-display ${styles.heroTitle}`}>
+              {hero.lines.map((line) => <span key={line}>{line}{' '}</span>)}
+            </h1>
+          </div>
+          <div className={styles.heroAside}>
+            <p className={styles.introduction}>{hero.description}</p>
+            <nav className={styles.paths} aria-label="Ways to contact CDS">
+              <div><a href="#book-a-time" className="button-base button-primary">{hero.call.label}<span aria-hidden="true">&nbsp;↓</span></a><p>{hero.call.detail}</p></div>
+              <div><a href="#send-a-message" className="button-base button-secondary">{hero.message.label}<span aria-hidden="true">&nbsp;↓</span></a><p>{hero.message.detail}</p></div>
+              <div className={styles.connect}>
+                <a href={digitalBusinessCard.href} target="_blank" rel="noopener noreferrer">
+                  {hero.connect.label}<span aria-hidden="true"> ↗</span><span className="sr-only"> (opens in a new tab)</span>
+                </a>
+                <p>{hero.connect.detail}</p>
+              </div>
+            </nav>
+          </div>
         </div>
+      </section>
 
-        <div className="mb-10 text-center">
-          <a
-            href={digitalBusinessCard.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center justify-center rounded-lg border border-white/20 bg-white/5 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
-          >
-            {digitalBusinessCard.label}
-            <span className="ml-2" aria-hidden="true">↗</span>
-            <span className="sr-only"> (opens in a new tab)</span>
-          </a>
-          <p className="mt-3 text-sm text-slate-400">{digitalBusinessCard.description}</p>
+      <section id="book-a-time" className={styles.scheduler} aria-labelledby="scheduler-heading">
+        <div className="site-container section-spacing">
+          <header className={styles.schedulerHeader}>
+            <div><p className={styles.eyebrow}>{scheduler.eyebrow}</p><h2 id="scheduler-heading" className={`cds-display ${styles.sectionTitle}`}>{scheduler.title}</h2></div>
+            <p className={styles.description}>{scheduler.description}</p>
+          </header>
+          <div className={styles.schedulerFrame}>
+            <iframe
+              src={`${process.env.NEXT_PUBLIC_HUBSPOT_MEETING_URL}?embed=true`}
+              width="100%"
+              height="690"
+              style={{ border: 0 }}
+              title="Book a call with Calvert Digital Solutions"
+            />
+          </div>
         </div>
+      </section>
 
-        <div className="rounded-2xl border border-white/10 bg-navy-800 overflow-hidden">
-          <iframe
-            src={`${process.env.NEXT_PUBLIC_HUBSPOT_MEETING_URL}?embed=true`}
-            width="100%"
-            height="690"
-            style={{ border: 0 }}
-            title="Book a call with Calvert Digital Solutions"
-          />
+      <section id="send-a-message" className={styles.written} aria-labelledby="written-heading">
+        <div className={`site-container section-spacing ${styles.writtenGrid}`}>
+          <header>
+            <p className={styles.eyebrow}>{written.eyebrow}</p>
+            <h2 id="written-heading" className={`cds-display ${styles.writtenTitle}`}>{written.lines.map((line) => <span key={line}>{line}{' '}</span>)}</h2>
+            <p className={styles.writtenDescription}>{written.description}</p>
+          </header>
+          <div className={styles.formFrame}><ContactForm /></div>
         </div>
-
-        <div className="mt-12 border-t border-white/10 pt-12">
-          <h3 className="text-xl font-semibold text-white text-center">Prefer to write first?</h3>
-          <p className="mt-2 text-center text-slate-400 text-sm">
-            Send me a message and I'll get back to you within one business day.
-          </p>
-          <ContactForm />
-        </div>
-      </div>
-    </section>
+      </section>
+    </div>
   );
 }

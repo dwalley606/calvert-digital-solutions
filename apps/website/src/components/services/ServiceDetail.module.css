@@ -1,0 +1,52 @@
+.hero { background: radial-gradient(ellipse at 90% 50%, rgb(126 163 200 / 15%), transparent 55%), var(--color-navy); }
+.backNav { padding-block: 1.5rem; border-bottom: 1px solid rgb(126 163 200 / 30%); }
+.textLink { display: inline-block; width: fit-content; border-bottom: 1px solid currentColor; padding-block: .3rem; font-size: .875rem; font-weight: 600; }
+.textLink:hover { color: var(--color-sand); }
+.textLink:focus-visible, .ctaPrimary:focus-visible { outline: 3px solid var(--color-coastal-blue); outline-offset: 5px; }
+.eyebrow { display: flex; align-items: center; gap: .8rem; font-size: .7rem; font-weight: 700; letter-spacing: .15em; line-height: 1.8; text-transform: uppercase; }
+.eyebrow::before { content: ""; flex: 0 0 2rem; height: 2px; background: var(--color-red); }
+.hero .eyebrow, .dark .eyebrow { color: var(--color-sand); }
+.heroGrid { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, .7fr); align-items: end; gap: clamp(2rem, 6vw, 6rem); padding-block: clamp(3rem, 6vw, 6rem); }
+.heroTitle { margin-top: 1.5rem; font-size: clamp(3.3rem, 7.4vw, 6.7rem); line-height: .94; }
+.heroTitle span { display: block; }
+.heroTitle span:last-child { color: var(--color-coastal-blue); }
+.heroAside { border-left: 1px solid rgb(126 163 200 / 35%); padding-left: clamp(1.5rem, 3vw, 3rem); }
+.heroMark { width: 6rem; height: auto; margin-bottom: 2rem; }
+.heroAside p { font-size: clamp(1rem, 1.5vw, 1.15rem); line-height: 1.9; }
+.light { background: var(--color-off-white); color: var(--color-navy); }
+.dark { background: linear-gradient(110deg, var(--color-navy), #0f3f5b); color: var(--color-off-white); }
+.editorialGrid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr); gap: clamp(2.5rem, 6vw, 6rem); }
+.sectionTitle { margin-top: 1.4rem; font-size: clamp(3.2rem, 5.5vw, 5.25rem); line-height: .95; }
+.description { margin-top: 1.5rem; max-width: 25rem; color: var(--color-slate); line-height: 1.85; }
+.dark .description { color: #cbd5e1; }
+.sectionBody { min-width: 0; }
+.numberedList { border-top: 2px solid var(--color-navy); }
+.numberedList li { display: grid; grid-template-columns: 3rem minmax(0, 1fr); gap: 1.5rem; padding-block: 1.8rem; border-bottom: 1px solid rgb(11 31 59 / 22%); }
+.number { color: var(--color-red); font-size: 3rem; line-height: 1; }
+.numberedList p { margin-top: .7rem; color: var(--color-slate); line-height: 1.85; }
+.examples { border-top: 1px solid rgb(126 163 200 / 50%); }
+.examples li { display: flex; gap: 1.25rem; padding-block: 1.25rem; border-bottom: 1px solid rgb(126 163 200 / 30%); line-height: 1.8; }
+.examples li::before { content: ""; width: .5rem; height: .5rem; margin-top: .6rem; flex-shrink: 0; background: var(--color-sand); }
+.counterpoint { margin-top: 2.5rem; padding-left: 1.5rem; border-left: 3px solid var(--color-sand); }
+.counterpoint p { margin-top: 1rem; color: #cbd5e1; line-height: 1.85; }
+.counterpoint a { margin-top: 1.5rem; }
+.prose { padding-top: .2rem; color: var(--color-slate); font-size: 1.05rem; line-height: 1.9; }
+.prose p + p { margin-top: 1.5rem; }
+.cta { position: relative; isolation: isolate; overflow: hidden; background: var(--color-red); }
+.ctaMark { position: absolute; z-index: -1; right: -4rem; bottom: -8rem; width: 28rem; height: auto; opacity: .09; pointer-events: none; }
+.ctaGrid { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 3rem; align-items: end; }
+.ctaTitle { max-width: 48rem; font-size: clamp(3.5rem, 7vw, 6.5rem); line-height: .92; }
+.cta p { max-width: 38rem; margin-top: 1.5rem; line-height: 1.85; }
+.actions { display: flex; flex-direction: column; align-items: flex-start; gap: 1rem; }
+.ctaPrimary { min-width: 11rem; color: var(--color-navy); background: var(--color-off-white); }
+.ctaPrimary:hover { color: var(--color-off-white); background: var(--color-navy); }
+.cta .textLink:focus-visible, .ctaPrimary:focus-visible { outline-color: var(--color-off-white); }
+@media (max-width: 767px) {
+  .heroGrid, .editorialGrid, .ctaGrid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  .heroTitle { font-size: clamp(3rem, 11.8vw, 5rem); }
+  .heroAside { border-left: 0; border-top: 1px solid rgb(126 163 200 / 30%); padding: 1.5rem 0 0; }
+  .heroMark { width: 4rem; margin-bottom: 1rem; }
+  .numberedList li { grid-template-columns: 2.4rem minmax(0, 1fr); gap: 1rem; }
+  .sectionTitle { font-size: clamp(3rem, 10vw, 4rem); }
+  .ctaMark { width: 20rem; }
+}

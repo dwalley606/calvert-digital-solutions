@@ -1,6 +1,8 @@
 'use client';
 
 import { useState } from 'react';
+import { contactPage } from '@/content/contact';
+import styles from './Contact.module.css';
 
 type Status = 'idle' | 'loading' | 'success' | 'error';
 
@@ -29,17 +31,17 @@ export default function ContactForm() {
 
   if (status === 'success') {
     return (
-      <p className="text-center text-slate-300 py-4">
-        Got it — I'll be in touch within one business day.
+      <p className={styles.success}>
+        {contactPage.form.success}
       </p>
     );
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mt-10 space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
+    <form onSubmit={handleSubmit} className={styles.form}>
+      <div className={styles.fieldRow}>
         <div>
-          <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-1">
+          <label htmlFor="name" className={styles.label}>
             Name
           </label>
           <input
@@ -47,12 +49,12 @@ export default function ContactForm() {
             name="name"
             type="text"
             required
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20"
-            placeholder="Jane Smith"
+            className={styles.input}
+            placeholder={contactPage.form.namePlaceholder}
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-1">
+          <label htmlFor="email" className={styles.label}>
             Email
           </label>
           <input
@@ -60,33 +62,33 @@ export default function ContactForm() {
             name="email"
             type="email"
             required
-            className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20"
-            placeholder="jane@yourbusiness.com"
+            className={styles.input}
+            placeholder={contactPage.form.emailPlaceholder}
           />
         </div>
       </div>
       <div>
-        <label htmlFor="message" className="block text-sm font-medium text-slate-300 mb-1">
-          What do you need?
+        <label htmlFor="message" className={styles.label}>
+          {contactPage.form.message}
         </label>
         <textarea
           id="message"
           name="message"
           rows={4}
           required
-          className="w-full rounded-lg border border-white/10 bg-white/5 px-4 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:ring-2 focus:ring-white/20 resize-none"
-          placeholder="Tell me about your business and what you're trying to fix or build."
+          className={styles.input}
+          placeholder={contactPage.form.messagePlaceholder}
         />
       </div>
       {status === 'error' && (
-        <p className="text-sm text-red-400">Something went wrong — try again or email me directly.</p>
+        <p className={styles.error}>{contactPage.form.error}</p>
       )}
       <button
         type="submit"
         disabled={status === 'loading'}
-        className="inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-slate-950 hover:bg-slate-200 transition disabled:opacity-50"
+        className={`button-base button-primary ${styles.submit}`}
       >
-        {status === 'loading' ? 'Sending…' : 'Send message'}
+        {status === 'loading' ? contactPage.form.sending : contactPage.form.submit}
       </button>
     </form>
   );

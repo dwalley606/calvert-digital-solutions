@@ -1,188 +1,34 @@
-# apps/website — Next.js App Guide
+# Website implementation guidance
 
-## Stack
-- **Framework:** Next.js 16.0.10, App Router, `src/app` directory
-- **Styling:** Tailwind v4 — uses `@import "tailwindcss"` in `globals.css`, NO `tailwind.config.js`
-- **Language:** TypeScript strict
-- **React:** v19.2.1
-- **Email:** Resend (`resend` npm package) — used in the contact form API route
-- **CRM:** HubSpot (free tier) — meeting embed + contact creation via private app token
+Canonical architecture, routes, setup, integration behavior, and known limitations are in the [root README](../../README.md). Follow the [repository guide](../../CLAUDE.md) as well.
 
-## Running locally
-```bash
-cd apps/website
-npm run dev   # http://localhost:3000
-```
-Requires a `.env.local` file copied from `.env.example` with real keys filled in.
+## Implementation entry points
 
-## Environment variables
-| Variable | Scope | Purpose |
-|---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | Public | Canonical URL (`https://calvertdigitalsolutions.com`) |
-| `NEXT_PUBLIC_HUBSPOT_MEETING_URL` | Public | HubSpot embed URL — used in `Contact.tsx` iframe |
-| `RESEND_API_KEY` | Server | Resend API key for contact form email delivery |
-| `HUBSPOT_ACCESS_TOKEN` | Server | HubSpot private app token — creates CRM contacts on form submit |
+- `src/app/layout.tsx` owns shared navigation, the main landmark, footer, metadata, local fonts, and conditional analytics. Do not add another main landmark inside new page implementations. The existing Monthly Retainer violation is pending separate work.
+- `src/app/page.tsx` composes Home sections. Services overview and About compose sections in their own page files. About also reuses `HomeCTA`.
+- `src/components/sections/Contact.tsx` is used only by `/contact` and renders `ContactForm`. Shared booking navigation leads to `/contact`.
+- Prefer new/editable page copy in `src/content`; existing legacy pages and some shared components still contain inline text. Do not broadly refactor unrelated copy to enforce the convention.
 
-## Design system (globals.css)
-Custom Tailwind v4 color tokens:
-```
-navy      #0a1628   ← main page background
-navy-800  #0d1f3c   ← card / navbar / footer background
-navy-700  #122347   ← gradient surface variant
-red       #c41e3a   ← primary CTA / accent color
-red-dark  #a81932   ← hover state for red
-```
-Body defaults: `bg-navy text-slate-100`, font: `system-ui, -apple-system, Arial, sans-serif` (no Google Fonts).
+## Visual implementation
 
----
+Use the current Home, Services overview, About, and Contact implementations as design references. Reuse `globals.css` theme tokens, `.site-container`, `.section-spacing`, `.button-base`, button variants, and `.cds-display`.
 
-## Directory layout
+Montserrat and Bebas Neue are locally loaded through `next/font/local`; use the established font variables and display class. Tailwind v4 configuration is CSS-first in `globals.css`; do not introduce a `tailwind.config.js`. Keep page-specific styling in scoped CSS modules where appropriate.
 
-```
-src/
-├── app/
-│   ├── layout.tsx                    ← root: Navbar + Footer, dark body
-│   ├── globals.css                   ← Tailwind v4 + @theme tokens
-│   ├── page.tsx                      ← home page
-│   ├── about/page.tsx                ← /about (fully self-contained page)
-│   ├── contact/page.tsx              ← /contact (wraps Contact section)
-│   ├── services/
-│   │   ├── page.tsx                  ← /services overview
-│   │   ├── custom-websites/page.tsx  ← /services/custom-websites
-│   │   ├── cms-websites/page.tsx     ← /services/cms-websites
-│   │   └── monthly-retainer/page.tsx ← /services/monthly-retainer
-│   └── api/
-│       └── contact/route.ts          ← POST handler: Resend email + HubSpot contact
-├── components/
-│   ├── layout/
-│   │   ├── Navbar.tsx                ← sticky, bg-navy-800
-│   │   └── Footer.tsx                ← bg-navy-800, © Calvert Digital Solutions LLC
-│   └── sections/
-│       ├── Hero.tsx                  ← used on home
-│       ├── Services.tsx              ← used on home + /services page
-│       ├── WhyCDS.tsx                ← used on home
-│       ├── FeaturedWork.tsx          ← used on home
-│       ├── Contact.tsx               ← used on home + /contact (HubSpot embed + ContactForm)
-│       ├── ContactForm.tsx           ← 'use client', submits to /api/contact
-│       ├── About.tsx                 ← NOT currently used on any page (old stub)
-│       ├── Video.tsx                 ← NOT currently used, has placeholder VIDEO_ID
-│       └── Process.tsx               ← NOT currently used on any page
-├── content/
-│   └── services.ts                   ← 3-item services array (title, desc, href)
-│   (site.ts, process.ts, caseStudies.ts are empty stubs)
-└── lib/
-    └── utils.ts, constraints.ts      ← both empty stubs
-```
+Use the existing production lighthouse SVGs and hero asset rather than older logo assumptions. The current selfie is temporary and appears on Home/About; About's media area is a still awaiting a real video. Never fabricate a video URL, controls, testimonial, or replacement business-card destination.
 
----
+Prefer `next/image` for images and `next/link` for internal route navigation; use ordinary anchors for section links/external destinations. Preserve meaningful heading order, accessible names, contrast, visible focus, and intentional mobile reflow. Respect reduced-motion preferences when adding motion.
 
-## Pages
+## Integration boundaries
 
-### Home (`/`)
-Composes: `Hero → Services → WhyCDS → FeaturedWork → Contact`
+Presentation work must preserve the HubSpot iframe destination/configuration, form fields and submission handling, API routes, scripts, IDs, and environment configuration unless the task explicitly authorizes integration changes. HubSpot's embedded appearance belongs to HubSpot configuration.
 
-### About (`/about`)
-Fully self-contained in `about/page.tsx` — no separate section component used. Sections:
-- Intro: photo + headline + one-para bio
-- Background: 3 paragraphs (logistics/PM background → education degree → web dev)
-- "What Working With Me Looks Like": 3-card grid (Clear timeline / Regular updates / You own everything)
-- CTA: links to `/contact`
+`src/content/contact.ts` owns the source-managed digital business-card destination. `/api/contact` performs Resend email and HubSpot CRM work; see the README for existing error-handling limitations. Mock/intercept requests for UI verification rather than sending real test messages.
 
-### Services overview (`/services`)
-`Services` section (card grid from `services.ts`) + "Not sure what you need?" CTA block.
+## Scope and validation
 
-### Service detail pages (all share same structure)
-Each has: back link → hero section → "What's Included/Covered" card grid → CTA
+Custom and CMS are modernized and independently compose the shared `src/components/services/ServiceDetail.tsx` pieces, `ServiceDetail.module.css`, and `types.ts`, using typed `src/content/customWebsite.ts` and `src/content/cmsWebsite.ts` content. Reuse that system for future service-detail adaptations.
 
-| Route | Title | Included items |
-|---|---|---|
-| `/services/custom-websites` | Custom Website Development | Custom Design, Mobile Responsive, SEO Foundations, Contact & Booking Integration, Performance Optimization |
-| `/services/cms-websites` | CMS Website Builds & Migrations | Platform Consultation, Redesign, Content Migration, Mobile Optimization, Basic SEO Setup |
-| `/services/monthly-retainer` | Monthly Maintenance & Support | Content Updates, Security Monitoring, Performance Checks, Priority Support, Hosting Management |
+Monthly Retainer still retains older design, structural, metadata, and lint issues. Modernize it only under an explicit scoped request; do not treat the current redesign as completion of every route.
 
-### Contact (`/contact`)
-Wraps the `Contact` section — HubSpot meeting iframe + `ContactForm` below it.
-
----
-
-## Components
-
-### Layout
-- **Navbar** — sticky `top-0 z-50`, nav links: Home / Services / About / Contact, "Book a Call" CTA anchors to `#contact`
-- **Footer** — logo, nav links (Services / About / Contact), copyright + "Built in Maryland"
-
-### Sections
-- **Hero** — centered, logo image + h1 "Modern Websites for Calvert County Businesses" + two CTAs (Book a Free Call → `#contact`, See Services → `/services`)
-- **Services** — reads from `src/content/services.ts`, renders 3 cards as `<Link>` to service detail pages
-- **WhyCDS** — 3-card grid: "Local & Available" / "Clear Communication" / "Ships on Time"
-- **FeaturedWork** — 3 placeholder project cards (all link to `https://danielwalley.vercel.app`), "View full portfolio →" link to same URL
-- **Contact** — `id="contact"` section; HubSpot meeting iframe (src from `NEXT_PUBLIC_HUBSPOT_MEETING_URL`), then `ContactForm`
-- **ContactForm** — `'use client'` component, fields: Name + Email + Message, POSTs JSON to `/api/contact`
-- **About** _(unused)_ — old stub section, not imported anywhere
-- **Video** _(unused)_ — YouTube embed with `YOUR_VIDEO_ID` placeholder, not imported anywhere
-- **Process** _(unused)_ — 3-step "how it works" section, not imported anywhere
-
----
-
-## API route — `POST /api/contact`
-
-Validates name/email/message (basic type + presence checks). On valid input:
-1. Sends email via Resend to `dwalley606@gmail.com`
-2. Creates a HubSpot CRM contact via `https://api.hubapi.com/crm/v3/objects/contacts`
-
-Both run in parallel (`Promise.allSettled`). Response is `500` only if email send fails; HubSpot failure is silent.
-
----
-
-## Content files
-
-`src/content/services.ts` — the only populated content file. Exports `services: Service[]`:
-```ts
-type Service = { title: string; desc: string; href: string; }
-```
-Current entries: Custom Websites (`/services/custom-websites`), CMS Websites (`/services/cms-websites`), Monthly Retainer (`/services/monthly-retainer`).
-
-`site.ts`, `process.ts`, `caseStudies.ts`, `src/lib/constraints.ts` are all empty — intended for future use.
-
----
-
-## Brand assets (`public/`)
-```
-public/
-├── brand/
-│   ├── logo/
-│   │   ├── cds-logo-full-size.png   ← used in Hero and Navbar/Footer
-│   │   ├── cds-logo-horizontal.png  ← available, not currently used
-│   │   ├── cds-navbar.png           ← available, not currently used
-│   │   └── cds-navbar-paint.png     ← available, not currently used
-│   └── icon/
-│       └── cds-shield.png           ← favicon + apple icon (in layout.tsx metadata)
-└── about/
-    └── selfie.jpg                   ← used on /about page
-```
-Service images (`web.jpg`, `automation.jpg`, `security.jpg`) live in `src/app/services/` — they are not currently used in any page or component.
-
----
-
-## Key patterns
-
-- Use `next/image` for all images
-- Use `next/link` for all internal navigation
-- Use `<a target="_blank" rel="noreferrer">` for external links (HubSpot, portfolio, etc.)
-- All site copy and data belongs in `src/content/` — never inline data in JSX
-- Tailwind v4 CSS-first config: add new design tokens in the `@theme` block in `globals.css`, never create `tailwind.config.js`
-
-## What to avoid
-- Vercel-specific APIs (`@vercel/og`, edge middleware, etc.) — keep it platform-portable
-- Putting copy or data inside JSX — it belongs in `src/content/`
-- Creating `tailwind.config.js` — this project uses Tailwind v4 CSS-first config
-
----
-
-## Known TODOs
-- `VideoSection` (`Video.tsx`) has `YOUR_VIDEO_ID` placeholder — swap when real video is ready or delete the component
-- `About.tsx`, `Video.tsx`, `Process.tsx` exist but are not used anywhere — clean up or wire in when needed
-- `FeaturedWork` cards all link to `https://danielwalley.vercel.app` — replace with real project links when available
-- `site.ts`, `process.ts`, `caseStudies.ts`, `constraints.ts` are empty stubs
-- Contact API `from` address is `onboarding@resend.dev` — needs a Resend-verified domain email before production
-- Service images (`web.jpg`, etc.) in `src/app/services/` are unused — move to `public/` or delete
+Run targeted lint/type checks and appropriate visual checks for changed code. App-wide lint currently has six pre-existing errors: three in Monthly Retainer and three in unused `WhyCDS.tsx`; report them accurately. There is no automated test suite or dedicated type-check script. Keep dependency changes, cleanup, and unrelated lint fixes separate from documentation/presentation tasks.

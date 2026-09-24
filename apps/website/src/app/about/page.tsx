@@ -1,159 +1,107 @@
-import Image from "next/image";
-import Link from "next/link";
 import type { Metadata } from "next";
+import Image from "next/image";
+import { aboutPage } from "@/content/aboutPage";
+import HomeCTA from "@/components/sections/HomeCTA";
+import styles from "./AboutPage.module.css";
 
-export const metadata: Metadata = {
-  title: "About | Calvert Digital Solutions",
-  description: "Danny Walley — Calvert County web developer. Local, direct, no agency overhead.",
-};
-
-const workingPoints = [
-  {
-    title: "Clear timeline upfront",
-    desc: "Before any work starts you get a plain-English plan: what's included, what it costs, and when it ships. No surprises.",
-  },
-  {
-    title: "Regular updates throughout",
-    desc: "You'll hear from me during the build, not just when it's done. No black holes, no waiting weeks for a reply.",
-  },
-  {
-    title: "You own everything when we're done",
-    desc: "Code, domain, hosting — it's all yours. No monthly lock-in, no proprietary platform, no gotchas.",
-  },
-];
+export const metadata: Metadata = aboutPage.metadata;
 
 export default function AboutPage() {
+  const { hero, story, philosophy, working, local } = aboutPage;
+
   return (
-    <main>
-      {/* ── Intro ─────────────────────────────────────────────── */}
-      <section className="border-b border-white/10 px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="grid gap-12 md:grid-cols-2 md:items-center">
-
-            {/* Photo */}
-            <div className="flex justify-center md:justify-start">
-              <div className="relative h-80 w-64 overflow-hidden rounded-2xl border border-white/10 shadow-xl md:h-[420px] md:w-80">
-                <Image
-                  src="/about/selfie.jpg"
-                  alt="Danny Walley"
-                  fill
-                  className="object-cover object-top"
-                  priority
-                />
-              </div>
+    <>
+      <section className={styles.hero} aria-labelledby="about-heading">
+        <div className={`site-container section-spacing ${styles.heroGrid}`}>
+          <div>
+            <p className={styles.eyebrow}>{hero.eyebrow}</p>
+            <h1 id="about-heading" className={`cds-display ${styles.heroTitle}`}>
+              {hero.lines.map((line) => <span key={line}>{line}</span>)}
+            </h1>
+            <p className={styles.introduction}>{hero.introduction}</p>
+            <p className={styles.bodyCopy}>{hero.description}</p>
+          </div>
+          <figure className={styles.portrait}>
+            <div className={styles.portraitImage}>
+              <Image src={hero.photo.src} alt={hero.photo.alt} fill sizes="(min-width: 1024px) 390px, (min-width: 768px) 36vw, 90vw" className={styles.photo} priority />
             </div>
+            <figcaption className={styles.portraitCaption}>
+              <span className="cds-display text-3xl tracking-wide">{hero.photo.caption}</span>
+              <span className="mt-1 block text-xs leading-5 text-sand">{hero.photo.detail}</span>
+            </figcaption>
+          </figure>
+        </div>
+      </section>
 
-            {/* Text */}
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs text-slate-300">
-                <span className="h-2 w-2 rounded-full bg-red" />
-                Calvert County, Maryland
-              </div>
-
-              <h1 className="mt-4 text-4xl font-extrabold tracking-tight text-white sm:text-5xl leading-tight">
-                Local Developer.<br />
-                Real Communication.<br />
-                Actual Results.
-              </h1>
-
-              <p className="mt-5 text-base leading-relaxed text-slate-300">
-                I'm Danny Walley — not an agency, not a template mill. Just a Calvert County
-                developer who builds clean, professional websites for local businesses. You deal
-                directly with me from the first call to launch day and beyond. No account managers,
-                no hand-offs, no runaround.
-              </p>
+      <section className={styles.story} aria-labelledby="story-heading">
+        <div className="site-container section-spacing">
+          <div className={styles.storyGrid}>
+            <header>
+              <p className={styles.eyebrow}>{story.eyebrow}</p>
+              <h2 id="story-heading" className={`cds-display ${styles.storyTitle}`}>
+                {story.lines.map((line) => <span key={line}>{line}</span>)}
+              </h2>
+            </header>
+            <div className={styles.storyCopy}>
+              {story.paragraphs.map((paragraph) => <p key={paragraph}>{paragraph}</p>)}
             </div>
+          </div>
+          <div className={styles.mediaRow}>
+            <figure className={styles.media}>
+              {/* Replace this still with the real video player when available; keep the media frame and caption. */}
+              <div className={styles.mediaFrame}>
+                <Image src={story.media.src} alt={story.media.alt} fill sizes="(min-width: 1024px) 560px, (min-width: 768px) 50vw, 100vw" className={styles.mediaPhoto} />
+              </div>
+              <figcaption className={styles.mediaCaption}>
+                <span className="cds-display text-3xl">{story.media.label}</span>
+                <span className="text-xs leading-5">{story.media.caption}</span>
+              </figcaption>
+            </figure>
+            <p className={`cds-display ${styles.conclusion}`}>{story.conclusion}</p>
           </div>
         </div>
       </section>
 
-      {/* ── Background ────────────────────────────────────────── */}
-      <section className="border-b border-white/10 px-4 py-20">
-        <div className="mx-auto max-w-4xl">
-          <h2 className="text-3xl font-bold tracking-tight text-white">Background</h2>
-
-          <div className="mt-8 space-y-6 text-base leading-relaxed text-slate-300">
-            <p>
-              Before web development I spent years in people management and logistics — coordinating
-              moving parts, keeping schedules on track when things went sideways, and being the person
-              others could count on to actually get it done. That experience doesn't disappear when I'm
-              building your site. It's how I run every project: scoped, scheduled, and shipped.
-            </p>
-            <p>
-              I'm also pursuing a degree in education, which means I've spent a lot of time thinking
-              about how to explain complicated things clearly. That shows up in how I talk with clients —
-              plain English, no jargon, no "just trust me" moments. You'll always know what's happening
-              and why, whether it's a DNS change or a layout decision.
-            </p>
-            <p>
-              Web development is where all of that comes together. I build with React and Next.js —
-              modern tools that produce fast, reliable websites. Because I understand both the technical
-              side and the communication side, I can build something that works for your business, not
-              just something that looks good in a demo.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* ── What working with me looks like ───────────────────── */}
-      <section className="border-b border-white/10 px-4 py-20">
-        <div className="mx-auto max-w-6xl">
-          <div className="mb-10">
-            <h2 className="text-3xl font-bold tracking-tight text-white">
-              What Working With Me Looks Like
-            </h2>
-            <p className="mt-3 text-slate-400">No mystery. No waiting around. Here's how it goes.</p>
-          </div>
-
-          <div className="grid gap-6 md:grid-cols-3">
-            {workingPoints.map((item) => (
-              <div key={item.title} className="rounded-2xl border border-white/10 bg-navy-800 p-6">
-                <div className="mb-4 flex h-10 w-10 items-center justify-center rounded-full bg-red/10">
-                  <CheckIcon className="h-5 w-5 text-red" />
-                </div>
-                <h3 className="font-semibold text-white">{item.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-slate-300">{item.desc}</p>
-              </div>
+      <section className={styles.philosophy} aria-labelledby="philosophy-heading">
+        <div className="site-container section-spacing">
+          <p className={styles.eyebrow}>{philosophy.eyebrow}</p>
+          <h2 id="philosophy-heading" className={`cds-display ${styles.sectionTitle}`}>{philosophy.title}</h2>
+          <div className={styles.pillars}>
+            {philosophy.pillars.map((pillar) => (
+              <article key={pillar.title}>
+                <h3 className="cds-display text-5xl text-sand">{pillar.title}</h3>
+                <p>{pillar.description}</p>
+              </article>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── CTA ───────────────────────────────────────────────── */}
-      <section className="px-4 py-24">
-        <div className="mx-auto max-w-2xl text-center">
-          <h2 className="text-2xl font-bold tracking-tight text-white">
-            Ready to get started?
-          </h2>
-          <p className="mt-3 text-slate-400">
-            Book a free 15-minute call. We'll talk through what you need and I'll tell you exactly
-            what it'll take.
-          </p>
-          <div className="mt-8">
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center rounded-lg bg-red px-8 py-3 text-base font-semibold text-white transition-colors hover:bg-red-dark"
-            >
-              Book a Free Call
-            </Link>
-          </div>
-          <p className="mt-3 text-xs text-slate-500">No pressure · 15 minutes · Free</p>
+      <section className={styles.working} aria-labelledby="working-heading">
+        <div className={`site-container section-spacing ${styles.workingGrid}`}>
+          <header>
+            <p className={styles.eyebrow}>{working.eyebrow}</p>
+            <h2 id="working-heading" className={`cds-display ${styles.sectionTitle}`}>{working.title}</h2>
+          </header>
+          <ol className={styles.commitments}>
+            {working.points.map((point) => (
+              <li key={point.number}>
+                <span className={`cds-display ${styles.number}`} aria-hidden="true">{point.number}</span>
+                <div><h3 className="cds-display text-3xl sm:text-4xl">{point.title}</h3><p>{point.description}</p></div>
+              </li>
+            ))}
+          </ol>
         </div>
       </section>
-    </main>
-  );
-}
 
-function CheckIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      viewBox="0 0 24 24"
-      strokeWidth={2.5}
-      stroke="currentColor"
-    >
-      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-    </svg>
+      <section className={styles.local} aria-labelledby="local-heading">
+        <div className={`site-container ${styles.localGrid}`}>
+          <Image src="/brand/production/cds-shield-simplified-color.svg" alt="" width={112} height={132} className={styles.localMark} />
+          <div><p className={styles.eyebrow}>{local.eyebrow}</p><h2 id="local-heading" className="cds-display mt-4 text-5xl sm:text-6xl">{local.title}</h2></div>
+          <p className="max-w-xl leading-7 text-slate-200">{local.description}</p>
+        </div>
+      </section>
+      <HomeCTA />
+    </>
   );
 }

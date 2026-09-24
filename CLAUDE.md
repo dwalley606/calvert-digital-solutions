@@ -1,34 +1,22 @@
-# Calvert Digital Solutions — Project Guide
+# CDS repository guidance
 
-## What this is
-The marketing website for Calvert Digital Solutions LLC — a one-person web dev shop serving local small businesses in Calvert County and Southern Maryland. The site's job is to explain what CDS does, build trust with local owners, and convert visitors to a 15-minute intro call via HubSpot.
+Read [README.md](README.md) for canonical developer documentation and [apps/website/CLAUDE.md](apps/website/CLAUDE.md) for app implementation guidance. Treat current source as authoritative when documentation disagrees; update affected documentation with an authorized implementation change.
 
-## Owner / developer
-Daniel Walley. Background is React / Next.js web development. The "Security & Foundations" service category covers practical setup work (domain, Google Workspace, SSL) that happens at launch — not deep security consulting.
+## Scope and working conventions
 
-## Repo layout
-```
-calvert-digital-solutions/
-├── CLAUDE.md               ← you are here
-├── apps/
-│   └── website/            ← Next.js 16 app (see apps/website/CLAUDE.md)
-└── README.md
-```
+- The only current app is `apps/website`. Run npm commands there; no root npm workspace is configured.
+- Inspect git status before editing and preserve unrelated work. Stage only explicitly intended files when staging is authorized; never sweep untracked files into a website commit.
+- `apps/website/REAPER-MCP-CAPABILITY-INVENTORY.md` is unrelated. Leave it untouched and exclude it from all website/redesign commits.
+- Keep cleanup separate unless explicitly requested: retained components, assets, stubs, and lockfiles are not automatic deletion targets.
+- Never expose or copy secret environment values into documentation or output.
+- Vercel/Cloudflare are documented infrastructure assumptions, not repository-verified account or deployment facts. Do not invent plan or deployment claims.
 
-This is a monorepo. There is currently one app. Future apps (admin dashboard, client portal, etc.) would be added as `apps/<name>`.
+## Product and content
 
-## Hosting & infrastructure
-- **Hosting:** Vercel (free tier) — avoid Vercel-specific APIs or edge features that create lock-in
-- **Domain:** Managed on Cloudflare — DNS is handled there, not in code
-- **CRM / scheduling:** HubSpot free tier — meeting link: `https://meetings-na2.hubspot.com/daniel-walley`
+CDS is Danny Walley's local web-development business serving Calvert County and Southern Maryland. Use practical, direct, personal language for small-business owners. Build/Grow/Support organizes the primary pages; avoid unsupported results, response-time guarantees, or invented service capabilities.
 
-## Tone & voice
-- Direct, no-fluff, practical
-- Local and personal ("I'll tell you", "we ship") — not corporate
-- Small business audience: skeptical of tech jargon, cares about outcomes and price
-- No pressure sales language
+Home, Services overview, About, Contact, Custom Websites, and CMS Websites use the current editorial system. Monthly Retainer modernization remains pending. Preserve established branding, shared navigation/footer, and integration behavior within each task's scope.
 
-## AI tooling notes
-This project is designed to be AI-tool-agnostic. CLAUDE.md files are the source of truth for agent context. If adapting for another tool:
-- Cursor: copy CLAUDE.md content into `.cursorrules`
-- ChatGPT/Copilot: paste relevant sections as system context
+## Verification
+
+Use the README's validation commands and known-issue baseline. Report checks actually performed and distinguish pre-existing failures from regressions. Keep credentials, delivery tests, and external configuration changes out of presentation-only work. Do not stage, commit, or push without authorization.
