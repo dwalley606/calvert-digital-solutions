@@ -16,7 +16,7 @@ export const contactPage = {
   scheduler: {
     eyebrow: 'A conversation is a good start',
     title: 'Book a time.',
-    description: 'Pick whatever works. A quick intro call is usually enough to figure out whether I can help and what makes sense next.',
+    description: 'Choose a phone or video consultation, then pick a time below. We’ll talk through your business, your goals, and a practical next step.',
   },
   written: {
     eyebrow: 'Start with a message',
@@ -32,3 +32,18 @@ export const contactPage = {
     sending: 'Sending…', submit: 'Send message',
   },
 };
+
+export const consultationFormats = [
+  {
+    id: 'phone',
+    label: 'Phone Consultation',
+    description: 'Talk through your project by phone. No video or meeting app needed.',
+    url: 'https://meetings-na2.hubspot.com/daniel-walley',
+  },
+  {
+    id: 'video',
+    label: 'Google Meet Video Consultation',
+    description: 'Meet face to face online with Google Meet, with room to share your screen.',
+    url: 'https://meetings-na2.hubspot.com/daniel-walley/google-meet-video-consultation',
+  },
+] as const;

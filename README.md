@@ -99,7 +99,7 @@ Page-specific styles are in Hero, ServicesPage, AboutPage, and Contact CSS modul
 
 ### Booking and digital business card
 
-`Contact.tsx` renders the existing HubSpot meeting iframe using `NEXT_PUBLIC_HUBSPOT_MEETING_URL` with `?embed=true` appended. HubSpot controls scheduling and the embedded interface; its appearance/configuration is managed outside this repository.
+`Contact.tsx` renders `ConsultationBooking.tsx`, a native radio selector that defaults to Phone Consultation and switches the embedded HubSpot calendar to Google Meet Video Consultation. The two scheduling URLs and explanatory copy live in `src/content/contact.ts`; each URL uses `?embed=true`. The former `NEXT_PUBLIC_HUBSPOT_MEETING_URL` setting is no longer read by the booking section. HubSpot controls scheduling and the embedded interface; its appearance/configuration is managed outside this repository.
 
 The Connect link uses `digitalBusinessCard.href` in `src/content/contact.ts`, opens in a new tab, and is source-managed separately from environment variables. Its destination needs a later owner-confirmed update; do not infer a replacement.
 
@@ -128,7 +128,7 @@ Use `apps/website/.env.example` as the variable template. No credential values b
 | Variable | Scope | Purpose |
 | --- | --- | --- |
 | `NEXT_PUBLIC_SITE_URL` | Public | Metadata base URL; source supplies a production-domain fallback |
-| `NEXT_PUBLIC_HUBSPOT_MEETING_URL` | Public | HubSpot scheduler destination; Contact appends the embed query |
+| `NEXT_PUBLIC_HUBSPOT_MEETING_URL` | Public | Legacy scheduler setting; the selector now uses the two source-managed URLs |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Public | Enables Google Analytics scripts in the root layout when set |
 | `RESEND_API_KEY` | Server only | Resend email delivery and API module initialization |
 | `HUBSPOT_ACCESS_TOKEN` | Server only | HubSpot contact creation; example documents `crm.objects.contacts.write` scope |

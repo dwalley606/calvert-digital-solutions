@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { contactPage, digitalBusinessCard } from '@/content/contact';
 import ContactForm from '@/components/sections/ContactForm';
+import ConsultationBooking from '@/components/sections/ConsultationBooking';
 import styles from './Contact.module.css';
 
 export default function Contact() {
@@ -38,15 +39,7 @@ export default function Contact() {
             <div><p className={styles.eyebrow}>{scheduler.eyebrow}</p><h2 id="scheduler-heading" className={`cds-display ${styles.sectionTitle}`}>{scheduler.title}</h2></div>
             <p className={styles.description}>{scheduler.description}</p>
           </header>
-          <div className={styles.schedulerFrame}>
-            <iframe
-              src={`${process.env.NEXT_PUBLIC_HUBSPOT_MEETING_URL}?embed=true`}
-              width="100%"
-              height="690"
-              style={{ border: 0 }}
-              title="Book a call with Calvert Digital Solutions"
-            />
-          </div>
+          <ConsultationBooking />
         </div>
       </section>
 
