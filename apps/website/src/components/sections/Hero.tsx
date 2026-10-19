@@ -28,7 +28,7 @@ export default function Hero() {
         </div>
         <div className={styles.brand}>
           <Image
-            src="/brand/hero/cds-shield-primary-hero-corrected.svg"
+            src="/brand/hero/cds-shield-primary-color.svg"
             alt={hero.markAlt}
             width={240}
             height={280}

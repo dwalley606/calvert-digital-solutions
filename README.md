@@ -93,7 +93,7 @@ Custom and CMS remain independently composed routes. They reuse `src/components/
 
 The primary pages combine oversized display typography, asymmetric layouts, light/dark sections, red accents, rules, and lighthouse artwork. Reuse existing container, button, focus, and responsive patterns. Shared buttons and hero buttons include reduced-motion handling; this is not a claim that every existing transition has been audited.
 
-Page-specific styles are in Hero, ServicesPage, AboutPage, and Contact CSS modules; Custom and CMS reuse the ServiceDetail CSS module. Production brand SVGs live in `public/brand/production`. Home uses `public/brand/hero/cds-shield-primary-hero-corrected.svg`; root metadata and the web manifest reference icon/social assets. `public/about/selfie.jpg` is currently used on Home and in About's portrait and future-video areas. About's media frame currently contains a still, not a video player.
+Page-specific styles are in Hero, ServicesPage, AboutPage, and Contact CSS modules; Custom and CMS reuse the ServiceDetail CSS module. Production brand SVGs live in `public/brand/production`. Home uses `public/brand/hero/cds-shield-primary-color.svg` with solid backing behind the CDS lettering; root metadata and the web manifest reference icon/social assets. `public/about/selfie.jpg` is currently used on Home and in About's portrait and future-video areas. About's media frame currently contains a still, not a video player.
 
 ## Integrations and contact data flow
 
