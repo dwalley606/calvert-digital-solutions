@@ -4,7 +4,10 @@ import { cmsWebsite } from "@/content/cmsWebsite";
 import { ServiceDetailHero, ServiceDetailSection, ServiceDetailList, ServiceDetailCta } from "@/components/services/ServiceDetail";
 import styles from "@/components/services/ServiceDetail.module.css";
 
-export const metadata: Metadata = cmsWebsite.metadata;
+export const metadata: Metadata = {
+  ...cmsWebsite.metadata,
+  alternates: { canonical: "/services/cms-websites" },
+};
 
 export default function CmsWebsitesPage() {
   const { hero, meaning, fit, projects, responsibilities, platform, cta } = cmsWebsite;

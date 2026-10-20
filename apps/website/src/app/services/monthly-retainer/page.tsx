@@ -2,6 +2,7 @@ import Link from 'next/link';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services/monthly-retainer" },
   title: 'Monthly Maintenance & Support | Calvert Digital Solutions',
   description: 'Ongoing website maintenance, updates, security monitoring, and support for small businesses. One flat monthly rate.',
 };

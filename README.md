@@ -127,7 +127,7 @@ Use `apps/website/.env.example` as the variable template. No credential values b
 
 | Variable | Scope | Purpose |
 | --- | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | Public | Metadata base URL; source supplies a production-domain fallback |
+| `NEXT_PUBLIC_SITE_URL` | Public | Legacy setting; canonical production URLs are defined in `src/lib/site.ts` |
 | `NEXT_PUBLIC_HUBSPOT_MEETING_URL` | Public | Legacy scheduler setting; the selector now uses the two source-managed URLs |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Public | Enables Google Analytics scripts in the root layout when set |
 | `RESEND_API_KEY` | Server only | Resend email delivery and API module initialization |
@@ -177,3 +177,7 @@ A deployment must build the app in `apps/website`, provide its environment confi
 Repository cleanup candidates are intentionally retained: unused About, FeaturedWork, Process, Services, Video, and WhyCDS sections; empty content/lib stubs; legacy logo/shield assets and service JPGs; and the empty root/intermediate lockfiles. The legacy Video component contains a placeholder video ID and is not About's future media implementation. Do not delete or activate candidates merely because they exist.
 
 `apps/website/REAPER-MCP-CAPABILITY-INVENTORY.md` is unrelated to CDS website documentation. Leave it untouched and exclude it from website/redesign commits; it will be handled separately.
+
+## Search discovery
+
+`src/lib/site.ts` defines the canonical host `https://www.calvertdigitalsolutions.com`. Each public page declares its own canonical path. `src/app/sitemap.ts` exposes `/sitemap.xml` with the seven public pages; API routes are excluded. `src/app/robots.ts` exposes `/robots.txt`, allows public crawling, disallows `/api/`, and links the sitemap. Keep the sitemap list current when adding public routes. Sitemap entries omit modification dates rather than claiming a new content update on every build.

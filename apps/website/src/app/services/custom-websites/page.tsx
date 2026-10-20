@@ -4,7 +4,10 @@ import { customWebsite } from "@/content/customWebsite";
 import { ServiceDetailHero, ServiceDetailSection, ServiceDetailList, ServiceDetailCta } from "@/components/services/ServiceDetail";
 import styles from "@/components/services/ServiceDetail.module.css";
 
-export const metadata: Metadata = customWebsite.metadata;
+export const metadata: Metadata = {
+  ...customWebsite.metadata,
+  alternates: { canonical: "/services/custom-websites" },
+};
 
 export default function CustomWebsitesPage() {
   const { hero, meaning, fit, approach, cta } = customWebsite;

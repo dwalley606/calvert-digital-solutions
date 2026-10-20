@@ -4,7 +4,10 @@ import { aboutPage } from "@/content/aboutPage";
 import HomeCTA from "@/components/sections/HomeCTA";
 import styles from "./AboutPage.module.css";
 
-export const metadata: Metadata = aboutPage.metadata;
+export const metadata: Metadata = {
+  ...aboutPage.metadata,
+  alternates: { canonical: "/about" },
+};
 
 export default function AboutPage() {
   const { hero, story, philosophy, working, local } = aboutPage;

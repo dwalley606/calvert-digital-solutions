@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 import Script from "next/script";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -6,7 +7,6 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID;
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://calvertdigitalsolutions.com";
 
 const montserrat = localFont({
   src: "./fonts/Montserrat-Variable.ttf",

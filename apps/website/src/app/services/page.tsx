@@ -5,6 +5,7 @@ import styles from "./ServicesPage.module.css";
 import { servicesPage } from "@/content/servicesPage";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/services" },
   title: "Services",
   description: "Practical website design, digital improvements, and ongoing local support for Calvert County businesses.",
 };
