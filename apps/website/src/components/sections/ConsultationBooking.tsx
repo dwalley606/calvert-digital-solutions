@@ -1,11 +1,18 @@
 "use client";
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { listenForVerifiedBookings } from '@/lib/booking-tracking';
+import { trackConversion } from '@/lib/analytics';
 import { consultationFormats } from '@/content/contact';
 import styles from './Contact.module.css';
 
 export default function ConsultationBooking() {
   const [selectedId, setSelectedId] = useState<string>(consultationFormats[0].id);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  useEffect(() => {
+    if (!iframeRef.current) return;
+    return listenForVerifiedBookings(iframeRef.current, trackConversion);
+  }, [selectedId]);
   const selected = consultationFormats.find((format) => format.id === selectedId) ?? consultationFormats[0];
 
   return (
@@ -37,6 +44,7 @@ export default function ConsultationBooking() {
       <div className={styles.schedulerFrame}>
         <iframe
           key={selected.id}
+          ref={iframeRef}
           src={`${selected.url}?embed=true`}
           width="100%"
           height="790"
