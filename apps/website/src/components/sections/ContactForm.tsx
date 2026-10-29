@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import { submissionIdentity, submitContact } from '@/lib/contact-client';
+import { trackConversion } from '@/lib/analytics';
 import { contactPage } from '@/content/contact';
 import styles from './Contact.module.css';
 
@@ -9,8 +11,13 @@ type Status = 'idle' | 'loading' | 'success' | 'error';
 export default function ContactForm() {
   const [status, setStatus] = useState<Status>('idle');
 
+  const inFlight = useRef(false);
+  const identity = useRef<{ payload: string; id: string } | null>(null);
+
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (inFlight.current) return;
+    inFlight.current = true;
     setStatus('loading');
 
     const form = e.currentTarget;
@@ -20,13 +27,21 @@ export default function ContactForm() {
       message: (form.elements.namedItem('message') as HTMLTextAreaElement).value,
     };
 
-    const res = await fetch('/api/contact', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-
-    setStatus(res.ok ? 'success' : 'error');
+    try {
+      const payload = JSON.stringify(data);
+      if (identity.current?.payload !== payload) {
+        identity.current = { payload, id: await submissionIdentity(data) };
+      }
+      const confirmed = await submitContact(data, identity.current!.id);
+      setStatus('success');
+      trackConversion({ name: 'generate_lead', parameters: {
+        lead_type: 'contact_form', form_id: 'cds_contact', submission_method: 'custom_api',
+      } }, confirmed.submissionId);
+    } catch {
+      setStatus('error');
+    } finally {
+      inFlight.current = false;
+    }
   }
 
   if (status === 'success') {
@@ -81,7 +96,8 @@ export default function ContactForm() {
         />
       </div>
       {status === 'error' && (
-        <p className={styles.error}>{contactPage.form.error}</p>
+        <p className={styles.error}>We could not confirm your message. Retry to check its status, or email me directly at{' '}
+          <a href="mailto:dwalley606@gmail.com">dwalley606@gmail.com</a>.</p>
       )}
       <button
         type="submit"

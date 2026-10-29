@@ -105,21 +105,31 @@ The Connect link uses `digitalBusinessCard.href` in `src/content/contact.ts`, op
 
 ### Written contact
 
-1. `ContactForm.tsx` collects required `name`, `email`, and `message` fields.
-2. It POSTs those JSON keys to `/api/contact` and displays loading/success/error states based on the response.
-3. The API checks string types, nonempty name/message, and an `@` in email; invalid input returns 400.
-4. It starts a Resend email and a HubSpot contact-creation request in parallel, waiting through `Promise.allSettled`.
-5. HubSpot receives `firstname`, `email`, and `message` properties at its contacts API. Email sender and recipient are currently hardcoded in the route; the sender is still the Resend onboarding address.
+1. `ContactForm.tsx` collects name, email and message and keeps one opaque UUID for retries of the same inquiry. It blocks concurrent clicks and handles network errors.
+2. `/api/contact` validates input, request origin, size and required configuration. It atomically claims the UUID in a durable ledger before making provider writes.
+3. The API finds an existing HubSpot contact by email, or creates one and resolves conflicts. Existing contact properties are never overwritten.
+4. Each distinct inquiry is appended as a new HubSpot note associated with the contact, preserving repeat messages. The association type is read from HubSpot rather than guessed.
+5. Only a confirmed note ID makes the inquiry `recorded`. Resend notification is separate; a failed notification does not turn a recorded inquiry into a failed submission. Resend responses are inspected and transient failures receive bounded retries with the same provider idempotency key. Sender and recipient remain unchanged.
+6. A duplicate request returns the saved confirmation. Definite CRM failures can retry under an atomic compare-and-set. Ambiguous note-write failures are never automatically posted again; retries search HubSpot for the submission marker and may recover the confirmation. A crash or search-index delay can leave the submission pending; operator reconciliation is required if it does not recover. Do not manually delete pending ledger entries and retry blindly.
+7. The browser emits `generate_lead` only for an explicit matching `recorded: true` acknowledgement, once per submission in that browser session. Analytics blocking does not prevent contact success.
 
-Existing limitations, recorded without changing behavior:
+### Rollout gate and durable ledger
 
-- The Resend client is constructed at module initialization. Missing `RESEND_API_KEY` blocked the recent production build while collecting `/api/contact` page data.
-- A rejected email promise produces a 500 response. Resolved Resend error results are not inspected.
-- HubSpot failure does not control the API response; the CRM HTTP response status is not checked.
-- The browser submission handler has no network-error catch, so a rejected fetch can leave the form in its loading state.
-- Current basic validation is not a comprehensive validation/abuse-prevention system.
+**This branch must not be deployed until the ledger is approved and configured.** Vercel had no connected database at implementation inspection. The proposed adapter uses Redis REST `SET NX` for atomic claims and compare-and-set for known-failure retries. No database/account/integration has been created. New variables are `CONTACT_LEDGER_REST_URL` and `CONTACT_LEDGER_REST_TOKEN`, both server-only. No new npm dependency is required.
 
-The redesign preserved the scheduler configuration, business-card destination, form submission handler, and backend route. Presentation changes do not establish end-to-end email/CRM delivery verification.
+The ledger contains only UUIDs, SHA-256 request digests, provider note IDs and state/notification status; no plaintext contact fields. Keep records without automatic expiry so old IDs do not silently become new inquiries. Provision durable storage with eviction disabled and monitor capacity; removing records weakens deduplication. A database outage fails closed before provider writes. Secure provisioning and credentials need separate owner approval. Confirm the existing private app can read contacts, create contacts/notes and read association labels before rollout; do not widen scopes silently.
+
+Notification failures are reported separately in the API and ledger; there is no background delivery queue. If a process dies after recording but before sending the email, the inquiry is preserved in HubSpot but the notification can be missing. Recovery should use the recorded inquiry and provider idempotency key, not create another note.
+
+### Analytics
+
+The existing direct Google tag remains the only installation. Its config executes only on `www.calvertdigitalsolutions.com`; GA4 enhanced browser-history page views remain authoritative, with no new route-change page-view hook. `src/lib/analytics.ts` reconstructs only fixed approved parameter values, excludes customer fields and deduplicates per opaque submission ID. Session-storage blocking falls back to memory; this is not a claim of globally exactly-once analytics delivery across devices or blocked cookies.
+
+`generate_lead`: `lead_type=contact_form`, `form_id=cds_contact`, `submission_method=custom_api`.
+
+`schedule_consultation`: reserved parameters `consultation_type=phone|google_meet`, `booking_provider=hubspot`. **Disabled** by a source-controlled false constant and null decoder. The listener infrastructure validates the exact regional origin, active iframe window, allowed scheduler path and decoded opaque booking identity. No assumed HubSpot success payload is used. Enabling requires a separately approved live booking, a verified decoder, and duplicate-message/reload tests.
+
+GA4 key-event/custom-dimension configuration and live DebugView/Realtime acceptance remain rollout tasks. Do not count page views, clicks, automatic `form_submit`, or a success page visit as a lead. Do not submit real inquiries/book meetings during automated tests.
 
 ## Environment variables
 
@@ -130,8 +140,10 @@ Use `apps/website/.env.example` as the variable template. No credential values b
 | `NEXT_PUBLIC_SITE_URL` | Public | Legacy setting; canonical production URLs are defined in `src/lib/site.ts` |
 | `NEXT_PUBLIC_HUBSPOT_MEETING_URL` | Public | Legacy scheduler setting; the selector now uses the two source-managed URLs |
 | `NEXT_PUBLIC_GA_MEASUREMENT_ID` | Public | Enables Google Analytics scripts in the root layout when set |
-| `RESEND_API_KEY` | Server only | Resend email delivery and API module initialization |
-| `HUBSPOT_ACCESS_TOKEN` | Server only | HubSpot contact creation; example documents `crm.objects.contacts.write` scope |
+| `RESEND_API_KEY` | Server only | Resend email notifications; initialized only during a request |
+| `HUBSPOT_ACCESS_TOKEN` | Server only | Contact lookup/create and inquiry notes; verify permissions before rollout |
+| `CONTACT_LEDGER_REST_URL` | Server only | Approved durable Redis REST endpoint |
+| `CONTACT_LEDGER_REST_TOKEN` | Server only | Ledger write credential; never expose to browser |
 
 Provide real configuration separately in local/deployment environments. The example's placeholders are not working credentials. The GA integration is conditional; the contact integrations are not implemented as optional mock services.
 
@@ -149,7 +161,7 @@ Run these from `apps/website`:
 | `npm run build` | Create production build; requires usable environment configuration |
 | `npm start` | Serve a successful production build |
 
-There is no dedicated type-check npm script or repository automated test suite. For scoped changes, run ESLint against the changed TS/TSX files and inspect desktop/mobile layouts, navigation, focus states, and relevant form states. Intercept form requests when testing presentation so tests do not send real email or create CRM records.
+`npm test` runs focused mocked-provider and analytics tests using Node built-in test tooling and TypeScript stripping (use Node 24, or a compatible Node 22 release). No tests call real provider APIs. There is no dedicated type-check npm script. For scoped changes, run ESLint against the changed TS/TSX files and inspect desktop/mobile layouts, navigation, focus states, and relevant form states. Intercept form requests when testing presentation so tests do not send real email or create CRM records.
 
 At the 2026-09-24 checkpoint audit, app-wide lint reported six pre-existing `react/no-unescaped-entities` errors: three in Monthly Retainer and three in unused `WhyCDS.tsx`. Both files remain untouched by this redesign checkpoint. Targeted lint and TypeScript checks passed for the changed source, including Custom and CMS. This is a dated baseline, not permission to ignore newly introduced failures.
 
@@ -172,7 +184,7 @@ A deployment must build the app in `apps/website`, provide its environment confi
 - Complete/verify production environment setup, including `RESEND_API_KEY`, email sender configuration, and CRM credentials.
 - Modernize `/services/monthly-retainer`. It retains older visual patterns, a nested main landmark, and a title string that repeats the root metadata template's brand suffix. Review older cost/support claims during that future pass. Custom and CMS have been modernized and no longer have those landmark/title issues.
 - Complete a whole-site desktop/mobile review after service-detail modernization.
-- Address existing lint failures and contact error-handling limitations in separate scoped work.
+- Address unrelated existing lint failures separately. Complete the contact-tracking rollout gates above.
 
 Repository cleanup candidates are intentionally retained: unused About, FeaturedWork, Process, Services, Video, and WhyCDS sections; empty content/lib stubs; legacy logo/shield assets and service JPGs; and the empty root/intermediate lockfiles. The legacy Video component contains a placeholder video ID and is not About's future media implementation. Do not delete or activate candidates merely because they exist.
 
